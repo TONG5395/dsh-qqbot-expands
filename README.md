@@ -39,7 +39,13 @@ DeepSeek Harness（DSH）插件：**在 QQ 官方机器人插件 `@tencent-conne
 
 ## 安装
 
-### 方式 A：从 GitHub 安装（推荐）
+### 方式 A：从 npm 安装（已发布版本，推荐）
+
+```bash
+dsh plugin --profile web add dsh-qqbot-expands
+```
+
+### 方式 B：从 GitHub 安装（跟 main 最新）
 
 ```bash
 dsh plugin --profile web add "github:TONG5395/dsh-qqbot-expands"
@@ -57,18 +63,18 @@ cd ~/.dsh/profiles/web
 pnpm add github:TONG5395/dsh-qqbot-expands
 ```
 
-### 方式 B：本地目录
+### 方式 C：本地目录
 
 ```bash
 cd ~/.dsh/profiles/web
 pnpm add link:/path/to/dsh-qqbot-expands
 ```
 
-### 方式 C：压缩包
+### 方式 D：压缩包
 
 ```bash
 cd ~/.dsh/profiles/web
-pnpm add file:/path/to/dsh-qqbot-expands-0.4.0.tar.gz
+pnpm add file:/path/to/dsh-qqbot-expands-0.4.1.tar.gz
 ```
 
 ### 启用与配置

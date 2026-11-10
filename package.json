@@ -1,6 +1,6 @@
 {
   "name": "dsh-qqbot-expands",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "description": "QQ 官方机器人插件（@tencent-connect/dsh-qqbot）的功能拓展 bundle：群聊频控、私聊问候、表情包、语音、绘图与统一设置页。",
   "main": "./index.js",
