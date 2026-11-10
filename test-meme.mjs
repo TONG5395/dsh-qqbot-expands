@@ -49,8 +49,8 @@ const r1 = await meme.execute({ tag: 'happy' }, { agent: { id: 'agent-1' } })
 assert.equal(r1.sent, true, '第一次应发出')
 assert.equal(sent.length, 1)
 assert.equal(sent[0].name, 'qqbot_send_file')
-assert.ok(sent[0].arguments.file_path.includes('/memes/'), '路径应在图库内')
-console.log('✓ 表情包挑选并转交 qqbot_send_file：' + sent[0].arguments.file_path.split('/').slice(-2).join('/'))
+assert.ok(sent[0].arguments.file_path.split(/[\\/]/).includes('memes'), '路径应在图库内')
+console.log('✓ 表情包挑选并转交 qqbot_send_file：' + sent[0].arguments.file_path.split(/[\\/]/).slice(-2).join('/'))
 
 // 2) chance=0 一定不发
 sent.length = 0
