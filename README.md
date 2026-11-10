@@ -42,7 +42,7 @@ DeepSeek Harness（DSH）插件：**在 QQ 官方机器人插件 `@tencent-conne
 ### 方式 A：从 GitHub 安装（推荐）
 
 ```bash
-dsh plugin --profile web add "github:USERNAME/dsh-qqbot-fixes"
+dsh plugin --profile web add "github:TONG5395/dsh-qqbot-fixes"
 ```
 
 `dsh plugin` 会把参数转给 profile 里的 pnpm。装完确认两件事：
@@ -54,7 +54,7 @@ dsh plugin --profile web add "github:USERNAME/dsh-qqbot-fixes"
 
 ```bash
 cd ~/.dsh/profiles/web
-pnpm add github:USERNAME/dsh-qqbot-fixes
+pnpm add github:TONG5395/dsh-qqbot-fixes
 ```
 
 ### 方式 B：本地目录
