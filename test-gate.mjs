@@ -1,6 +1,6 @@
 /**
  * 自测：新频控闸（无效过滤 / 文件审批 / 30s 防抖 / 不限速 / 单层包装）
- * 运行：node /root/workspace/dsh-qqbot-fixes/test-gate.mjs
+ * 运行：node /root/workspace/dsh-qqbot-expands/test-gate.mjs
  */
 import assert from 'node:assert'
 

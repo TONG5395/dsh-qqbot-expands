@@ -1,17 +1,17 @@
-// client.js — @local/dsh-qqbot-fixes 的浏览器半边
+// client.js — @local/dsh-qqbot-expands 的浏览器半边
 //
 // 设置 →「QQ 机器人 · 问候」一页管全部 QQ 适配：
 //   管理员 / 群聊频控 / 表情包 / 语音 / 绘图 / 私聊问候。
-// 数据来自宿主路由 /qqbot-fixes/settings（GET 读、POST 写），保存后立即生效。
+// 数据来自宿主路由 /qqbot-expands/settings（GET 读、POST 写），保存后立即生效。
 
 window.__ModuleLoader__.load({
-  id: 'dsh-qqbot-fixes',
+  id: 'dsh-qqbot-expands',
   factory(require) {
     const React = require('react')
     const h = React.createElement
     const module = { exports: {} }
     const exports = module.exports
-    const API = '/qqbot-fixes/settings'
+    const API = '/qqbot-expands/settings'
 
     const S = {
       wrap: { display: 'flex', flexDirection: 'column', gap: 16, padding: '4px 0 24px' },
@@ -292,7 +292,7 @@ window.__ModuleLoader__.load({
     function apply(ctx) {
       ctx.slots.inject('settings.section', () => ctx.slots.register({
         name: 'settings.section',
-        id: 'qqbot-fixes',
+        id: 'qqbot-expands',
         order: 8,
         label: 'QQ 机器人 · 问候',
       }, Section))

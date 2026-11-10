@@ -1,4 +1,4 @@
-# dsh-qqbot-fixes
+# dsh-qqbot-expands
 
 DeepSeek Harness（DSH）插件：**在 QQ 官方机器人插件 `@tencent-connect/dsh-qqbot` 基础上的功能拓展**。
 
@@ -42,38 +42,38 @@ DeepSeek Harness（DSH）插件：**在 QQ 官方机器人插件 `@tencent-conne
 ### 方式 A：从 GitHub 安装（推荐）
 
 ```bash
-dsh plugin --profile web add "github:TONG5395/dsh-qqbot-fixes"
+dsh plugin --profile web add "github:TONG5395/dsh-qqbot-expands"
 ```
 
 `dsh plugin` 会把参数转给 profile 里的 pnpm。装完确认两件事：
 
-1. `~/.dsh/profiles/web/package.json` 的 `dependencies` 里有 `dsh-qqbot-fixes`；
-2. 同文件 `dsh.profile.bundles` 数组里有 `"dsh-qqbot-fixes"`（没有就手动加上）。
+1. `~/.dsh/profiles/web/package.json` 的 `dependencies` 里有 `dsh-qqbot-expands`；
+2. 同文件 `dsh.profile.bundles` 数组里有 `"dsh-qqbot-expands"`（没有就手动加上）。
 
 也可以直接走 pnpm：
 
 ```bash
 cd ~/.dsh/profiles/web
-pnpm add github:TONG5395/dsh-qqbot-fixes
+pnpm add github:TONG5395/dsh-qqbot-expands
 ```
 
 ### 方式 B：本地目录
 
 ```bash
 cd ~/.dsh/profiles/web
-pnpm add link:/path/to/dsh-qqbot-fixes
+pnpm add link:/path/to/dsh-qqbot-expands
 ```
 
 ### 方式 C：压缩包
 
 ```bash
 cd ~/.dsh/profiles/web
-pnpm add file:/path/to/dsh-qqbot-fixes-0.4.0.tar.gz
+pnpm add file:/path/to/dsh-qqbot-expands-0.4.0.tar.gz
 ```
 
 ### 启用与配置
 
-1. 在 profile 的 `package.json` 里把 `"dsh-qqbot-fixes"` 加进 `dsh.profile.bundles`；
+1. 在 profile 的 `package.json` 里把 `"dsh-qqbot-expands"` 加进 `dsh.profile.bundles`；
 2. 在 profile 的 `cordis.patch.yml` 里加配置块（见下方“配置参考”）；
 3. 重启 DSH 引擎；
 4. 打开设置 →「QQ 机器人 · 问候」，六块设置都在这里。
@@ -181,8 +181,8 @@ pnpm add file:/path/to/dsh-qqbot-fixes-0.4.0.tar.gz
 ## 配置参考
 
 ```yaml
-- id: qqbot-fixes
-  name: 'dsh-qqbot-fixes'
+- id: qqbot-expands
+  name: 'dsh-qqbot-expands'
   config:
     gate:
       enabled: true

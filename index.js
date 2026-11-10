@@ -1,5 +1,5 @@
 /**
- * @local/dsh-qqbot-fixes
+ * @local/dsh-qqbot-expands
  *
  * 给官方 @tencent-connect/dsh-qqbot 补两块缺失能力：
  *
@@ -16,9 +16,9 @@
  *    丢弃一部分，直接不进入中间件链与 agent，不烧 token。
  *    @ 消息、私聊消息永远放行。
  *
- * 配置在 profile 的 cordis.patch.yml 里，id 为 qqbot-fixes。
+ * 配置在 profile 的 cordis.patch.yml 里，id 为 qqbot-expands。
  *
- * @module dsh-qqbot-fixes
+ * @module dsh-qqbot-expands
  */
 import Schema from '@deepseek-ai/schemastery'
 import { appendFileSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs'
@@ -26,7 +26,7 @@ import { homedir } from 'node:os'
 import { basename, extname, join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
-export const name = 'qqbot-fixes'
+export const name = 'qqbot-expands'
 export const inject = ['tools']
 
 const QQ_HOME = join(homedir(), '.dsh-qqbot')
@@ -193,7 +193,7 @@ export const Config = Schema.object({
 
 function log(message) {
   // 项目经验：logger.info 不进引擎日志，console.log 才进
-  console.log('[qqbot-fixes] ' + message)
+  console.log('[qqbot-expands] ' + message)
 }
 
 function normalizeBaseUrl(raw) {
@@ -295,7 +295,7 @@ function withTimeout(ms, signal) {
  * 全局注册表：热重载会重新执行本模块，这里保证 QQBot 原型上只有一层包装。
  * 每次 apply 只替换 controller（新代码 + 新配置），旧 controller 先 dispose。
  */
-const REG_KEY = Symbol.for('@local/dsh-qqbot-fixes/registry')
+const REG_KEY = Symbol.for('@local/dsh-qqbot-expands/registry')
 
 function registry() {
   let reg = globalThis[REG_KEY]
@@ -745,7 +745,8 @@ function installGate(QQBot, rt) {
   if (!reg.installed) {
     // 清掉历史热重载叠加的包装，只留最底层原始方法
     let base = QQBot.prototype.handleInboundMessage
-    while (base && base.__qqbotFixesWrapper === true) base = base.__original
+    // 兼容旧版本标记（改名前的 wrapper），避免热重载叠加
+    while (base && (base.__qqbotExpandsWrapper === true || base.__qqbotFixesWrapper === true)) base = base.__original
     reg.original = base && typeof base === 'function' ? base : QQBot.prototype.handleInboundMessage
     const wrapper = async function patchedHandleInboundMessage(raw) {
       const c = reg.controller
@@ -760,7 +761,7 @@ function installGate(QQBot, rt) {
       }
       return reg.original.call(this, raw)
     }
-    wrapper.__qqbotFixesWrapper = true
+    wrapper.__qqbotExpandsWrapper = true
     wrapper.__original = reg.original
     QQBot.prototype.handleInboundMessage = wrapper
     reg.installed = true
@@ -1397,10 +1398,10 @@ function registerSettingsRoutes(ctx, rt) {
     if (!webServer || typeof webServer.register !== 'function') return
     const dispose = webServer.register({
       kind: 'exact',
-      path: '/qqbot-fixes/settings',
+      path: '/qqbot-expands/settings',
       handler: (req, res) => { void handleSettingsRoute(rt, req, res) },
     })
-    scoped.effect(() => dispose, 'qqbot-fixes.settings-routes')
+    scoped.effect(() => dispose, 'qqbot-expands.settings-routes')
   })
 }
 
@@ -2068,10 +2069,10 @@ async function viaChat(cfg, prompt, model, signal) {
 }
 
 async function drawImage(cfg, { prompt, size, model, protocol }, signal) {
-  if (!cfg.enabled) throw new Error('绘图未启用：配置 qqbot-fixes.drawing.enabled=false')
-  if (cfg.baseUrl === '') throw new Error('未配置绘图接口：请在 cordis.patch.yml 的 qqbot-fixes.drawing.baseUrl 填地址')
+  if (!cfg.enabled) throw new Error('绘图未启用：配置 qqbot-expands.drawing.enabled=false')
+  if (cfg.baseUrl === '') throw new Error('未配置绘图接口：请在 cordis.patch.yml 的 qqbot-expands.drawing.baseUrl 填地址')
   const effectiveModel = model || cfg.model
-  if (effectiveModel === '') throw new Error('未配置绘图模型：请在 qqbot-fixes.drawing.model 填模型 id')
+  if (effectiveModel === '') throw new Error('未配置绘图模型：请在 qqbot-expands.drawing.model 填模型 id')
 
   const order = protocol === 'auto'
     ? (cfg.protocol === 'chat' ? ['chat', 'images'] : ['images', 'chat'])
