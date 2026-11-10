@@ -1,0 +1,49 @@
+{
+  "name": "dsh-qqbot-fixes",
+  "version": "0.4.0",
+  "type": "module",
+  "description": "QQ 官方机器人插件（@tencent-connect/dsh-qqbot）的功能拓展 bundle：群聊频控、私聊问候、表情包、语音、绘图与统一设置页。",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json",
+    "./client": "./client.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=20.3.0"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "qqbot",
+    "qq",
+    "bot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/USERNAME/dsh-qqbot-fixes.git"
+  },
+  "homepage": "https://github.com/USERNAME/dsh-qqbot-fixes"
+}

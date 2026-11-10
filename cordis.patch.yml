@@ -1,0 +1,73 @@
+# dsh-qqbot-fixes bundle patch
+#
+# 两块能力：
+#   1) qqbot_draw_image —— 官方 0.5.3 没有这个工具（旧补丁在 node_modules 里，重装即丢）。
+#   2) 群聊频控闸 —— 拦未 @ 的群消息，按概率/间隔/额度丢弃，不进 agent 不烧 token。
+#
+# 实际取值在 profile 的 cordis.patch.yml 里按 id: qqbot-fixes 覆盖。
+- insert:
+    - id: qqbot-fixes
+      name: 'dsh-qqbot-fixes'
+      config:
+        gate:
+          enabled: true
+          chance: 0.25
+          minIntervalMs: 0
+          maxPerHour: 0
+          maxPerDay: 0
+          debounceMs: 30000
+          invalid:
+            enabled: true
+            minLength: 2
+            dropPureRepeat: true
+            dropPurePunctuation: true
+            dropFiller: true
+          files:
+            requireAdminApproval: true
+            adminOpenids: []
+            approvalKeywords:
+              - 同意
+              - 允许
+              - 可以读
+              - 读吧
+              - 批准
+              - 看吧
+            approvalTtlMs: 600000
+            noticeCooldownMs: 300000
+          skipMergedAttachments: true
+        voice:
+          enabled: true
+          ttsBaseUrl: ''
+          ttsApiKey: ''
+          ttsProtocol: gptsovits
+          ttsModel: ''
+          ttsVoice: default
+          ttsFormat: wav
+          asrBaseUrl: ''
+          asrApiKey: ''
+          asrModel: whisper-large-v3-turbo
+          autoSend: true
+          timeoutMs: 120000
+        meme:
+          enabled: true
+          packDir: ''
+          chance: 0.6
+          maxRecent: 3
+        greeting:
+          enabled: true
+          idleBaseMs: 7200000
+          jitterRatio: 0.4
+          quietStartHour: 22
+          quietEndHour: 8
+          maxPerNight: 3
+          checkIntervalMs: 300000
+          tzOffsetHours: 8
+          greetings: []
+        drawing:
+          enabled: true
+          baseUrl: ''
+          apiKey: ''
+          model: ''
+          size: 1024x1024
+          protocol: auto
+          timeoutMs: 300000
