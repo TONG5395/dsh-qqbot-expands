@@ -182,4 +182,37 @@ assert.equal(badRes.status, 400)
 assert.ok(JSON.parse(badRes.body).error.includes('chance'))
 console.log('✓ 非法配置被拒')
 
+// 10) 设置接口准入：必须走 connection.admit()，缺服务时失败关闭
+const { admitSettingsRequest } = __test
+
+const noService = fakeRes()
+assert.equal(admitSettingsRequest(undefined, fakeReq('GET'), noService), false, '无 connection 应拒绝')
+assert.equal(noService.status, 403)
+console.log('✓ 没有 connection 服务时设置接口失败关闭（403）')
+
+const rejected = { admit: () => ({ rejection: 401 }) }
+const r401 = fakeRes()
+assert.equal(admitSettingsRequest(rejected, fakeReq('GET'), r401), false)
+assert.equal(r401.status, 401)
+
+const forbidden = { admit: () => ({ rejection: 403 }) }
+const r403 = fakeRes()
+assert.equal(admitSettingsRequest(forbidden, fakeReq('POST'), r403), false)
+assert.equal(r403.status, 403)
+
+const throwing = { admit: () => { throw new Error('bad credential') } }
+const rThrow = fakeRes()
+assert.equal(admitSettingsRequest(throwing, fakeReq('GET'), rThrow), false)
+assert.equal(rThrow.status, 401)
+console.log('✓ admit 拒绝（401/403）与异常都挡在设置逻辑之前')
+
+let seen = null
+const admitting = { admit: (request) => { seen = request.headers; return { peer: { id: 'peer-1' } } } }
+const okReq = fakeReq('GET')
+okReq.headers = { cookie: 'dsh-session=abc' }
+const okRes2 = fakeRes()
+assert.equal(admitSettingsRequest(admitting, okReq, okRes2), true, '已认证应放行')
+assert.deepEqual(seen, { cookie: 'dsh-session=abc' }, '请求头应原样交给 admit')
+console.log('✓ 已认证请求放行，请求头原样交给 connection.admit')
+
 console.log('\n问候全部通过')

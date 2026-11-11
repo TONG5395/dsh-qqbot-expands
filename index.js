@@ -1390,16 +1390,51 @@ async function handleSettingsRoute(rt, req, res) {
   sendJson(res, 200, { ok: true, ...settingsSnapshot(rt) })
 }
 
+/** 设置接口的准入：交给宿主 Connection 校验签名凭据与活 Peer，缺服务时失败关闭。 */
+function admitSettingsRequest(connection, req, res) {
+  if (!connection || typeof connection.admit !== 'function') {
+    // fail closed：没有 connection 服务就不给读写配置的入口
+    sendJson(res, 403, { ok: false, error: '设置接口不可用：宿主未提供 connection 服务' })
+    return false
+  }
+  let admission
+  try {
+    admission = connection.admit({ headers: req.headers ?? {} })
+  } catch (err) {
+    log('设置接口认证异常：' + (err?.message ?? err))
+    sendJson(res, 401, { ok: false, error: '认证失败' })
+    return false
+  }
+  const rejection = admission?.rejection
+  if (rejection !== undefined) {
+    sendJson(res, rejection, { ok: false, error: rejection === 403 ? 'forbidden' : 'unauthorized' })
+    return false
+  }
+  if (!admission?.peer) {
+    sendJson(res, 401, { ok: false, error: 'unauthorized' })
+    return false
+  }
+  return true
+}
+
 function registerSettingsRoutes(ctx, rt) {
   const inject = ctx.inject
   if (typeof inject !== 'function') return
   inject.call(ctx, ['webServer'], (scoped) => {
     const webServer = scoped.webServer
     if (!webServer || typeof webServer.register !== 'function') return
+    const connection = typeof scoped.get === 'function' ? scoped.get('connection') : undefined
+    if (!connection || typeof connection.admit !== 'function') {
+      log('未提供 connection 服务，设置接口不注册（不以无认证方式开放）')
+      return
+    }
     const dispose = webServer.register({
       kind: 'exact',
       path: '/qqbot-expands/settings',
-      handler: (req, res) => { void handleSettingsRoute(rt, req, res) },
+      handler: (req, res) => {
+        if (!admitSettingsRequest(connection, req, res)) return
+        void handleSettingsRoute(rt, req, res)
+      },
     })
     scoped.effect(() => dispose, 'qqbot-expands.settings-routes')
   })
@@ -2292,7 +2327,7 @@ function buildTools(ctx, rt) {
 // ─────────────────────────── 入口 ───────────────────────────
 
 // 仅供单测使用（不参与运行时）
-export const __test = { createRuntime, resolveConfig, tickGreeting, greetingSummary, handleSettingsRoute, settingsSnapshot }
+export const __test = { createRuntime, resolveConfig, tickGreeting, greetingSummary, handleSettingsRoute, settingsSnapshot, admitSettingsRequest }
 
 export async function apply(ctx, config) {
   const resolved = resolveConfig(config)
